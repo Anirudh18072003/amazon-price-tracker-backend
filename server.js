@@ -8,13 +8,16 @@ const productRoutes = require("./routes/productRoutes");
 const contactRoutes = require("./routes/contact");
 const schedulePriceCheck = require("./scheduler/priceChecker");
 const PORT = process.env.PORT || 5000;
-
+const allowedOrigins = [
+  "https://your-vercel-app.vercel.app",
+  "http://localhost:3000", // for local testing
+];
 const app = express();
 app.use(
   cors({
     origin: [
       "http://localhost:5173", // for local dev
-      "https://amazon-price-tracker-frontend.vercel.app/", // replace with actual frontend URL
+      "https://amazon-price-tracker-frontend.vercel.app", // replace with actual frontend URL
     ],
     credentials: true,
   })
