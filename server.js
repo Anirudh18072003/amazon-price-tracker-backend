@@ -9,7 +9,15 @@ const contactRoutes = require("./routes/contact");
 const schedulePriceCheck = require("./scheduler/priceChecker");
 
 const app = express();
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173", // for local dev
+      "https://amazon-price-tracker-frontend.vercel.app/", // replace with actual frontend URL
+    ],
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
