@@ -8,21 +8,15 @@ const productRoutes = require("./routes/productRoutes");
 const contactRoutes = require("./routes/contact");
 const schedulePriceCheck = require("./scheduler/priceChecker");
 const PORT = process.env.PORT || 5000;
-const allowedOrigins = [
-  "https://amazon-price-tracker-frontend.vercel.app/",
-  "http://localhost:3000", // for local testing
-];
+const FRONTEND_URL = "https://amazon-price-tracker-frontend.vercel.app";
+
 const app = express();
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true,
+    origin: FRONTEND_URL, // allow only your Vercel app
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    credentials: true, // if you need to send cookies/auth
+    optionsSuccessStatus: 200, // some browsers choke on 204 responses
   })
 );
 app.use(express.json());
