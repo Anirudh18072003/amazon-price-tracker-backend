@@ -134,17 +134,22 @@ router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email });
-    const isMatch = user && (await bcrypt.compare(password, user.password));
-    if (!user || !isMatch) {
-      console.log("Stored hashed password:", user.password);
-      console.log("Trying to match with:", password);
+    const user = await User.findOne({ email }); // ✅ Prevent crash if user doesn't exist
+
+    if (!user) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
     const token = generateToken(user);
     res.json({ token, user: { name: user.name, email: user.email } });
   } catch (err) {
+    console.error("Login failed:", err);
     res.status(500).json({ message: "Login failed", error: err.message });
   }
 });
